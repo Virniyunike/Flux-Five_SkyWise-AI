@@ -2,12 +2,13 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Membaca file .env di root direktori proyek
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,6 +78,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -83,16 +88,14 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/profil/'
 LOGOUT_REDIRECT_URL = '/'
 
-# Email backend untuk password reset (ganti ke SMTP untuk production)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@skywise.ai'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''       # isi dengan email Gmail kamu
-EMAIL_HOST_PASSWORD = ''   # isi dengan App Password Gmail
+EMAIL_HOST_USER = ''      
+EMAIL_HOST_PASSWORD = ''   
 
-# Mengambil API Key dari file .env secara aman
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
 OPENWEATHER_API_KEY = os.getenv('OPENWEATHER_API_KEY')
 
