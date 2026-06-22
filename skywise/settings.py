@@ -13,7 +13,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://flux-fiveskywise-ai-production.up.railway.app']
 
-pythonINSTALLED_APPS = [
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
