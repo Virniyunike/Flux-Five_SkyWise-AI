@@ -14,22 +14,24 @@ ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://flux-fiveskywise-ai-production.up.railway.app']
 
+# PERBAIKAN UTAMA: Menggunakan Cloudinary khusus untuk file MEDIA saja 
+# agar tidak merusak dan mengambil alih fungsionalitas file STATIC (CSS)
 INSTALLED_APPS = [
-    'cloudinary_storage',         
-    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles', 
+    'cloudinary_storage',         
+    'cloudinary',
     'accounts',
     'cuaca',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Mengurus CSS di Railway
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,15 +86,18 @@ USE_I18N = True
 
 USE_TZ = True
 
+# --- AMAN: SETTING STATIC UNTUK WHITENOISE ---
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# --- AMAN: SETTING MEDIA KHUSUS UNTUK CLOUDINARY ---
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Menggunakan CloudinaryStorage spesifik untuk MEDIA agar tidak membajak STATIC bawaan Django/WhiteNoise
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
