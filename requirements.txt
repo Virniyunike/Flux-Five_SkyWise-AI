@@ -5,4 +5,5 @@ mysqlclient
 requests
 whitenoise
 Pillow
+django-cloudinary-storage
 cloudinary
