@@ -542,9 +542,12 @@ def galeri_upload(request):
         if not judul or not kota or not gambar:
             messages.error(request,'Judul, kota, dan foto wajib diisi!')
         else:
+            import cloudinary.uploader
+            upload_result = cloudinary.uploader.upload(gambar)
+            gambar_url = upload_result['secure_url']
             obj = Galeri(
                 judul=judul, kota=kota, kondisi_cuaca=kondisi,
-                deskripsi=deskripsi, gambar=gambar, disetujui=False,
+                deskripsi=deskripsi, gambar=gambar_url, disetujui=False,
             )
             if request.user.is_authenticated:
                 obj.diunggah_oleh = request.user
@@ -557,7 +560,6 @@ def galeri_upload(request):
     return render(request,'galeri_upload.html',{
         'kondisi_choices':kondisi_choices,'kategori_list':kategori_list,
     })
-
 
 def weather_highlights(request):
     kategori_id  = request.GET.get('kategori','')
@@ -683,15 +685,20 @@ def tips_list_dashboard(request):
 def tips_create(request):
     kategori_list = Kategori.objects.all()
     if request.method == 'POST':
+        gambar = request.FILES.get('gambar')
+        gambar_url = None
+        if gambar:
+            import cloudinary.uploader
+            upload_result = cloudinary.uploader.upload(gambar)
+            gambar_url = upload_result['secure_url']
         TipsCuaca.objects.create(
             judul=request.POST.get('judul'),isi=request.POST.get('isi'),
             kategori_id=request.POST.get('kategori'),
-            gambar=request.FILES.get('gambar'),penulis=request.user,
+            gambar=gambar_url, penulis=request.user,
         )
         messages.success(request,'Tips berhasil ditambahkan!')
         return redirect('tips_list_dashboard')
     return render(request,'dashboard/tips_form.html',{'kategori_list':kategori_list,'action':'Tambah'})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -699,14 +706,17 @@ def tips_edit(request, pk):
     tips = get_object_or_404(TipsCuaca, pk=pk)
     kategori_list = Kategori.objects.all()
     if request.method == 'POST':
-        tips.judul=request.POST.get('judul'); tips.isi=request.POST.get('isi')
+        tips.judul=request.POST.get('judul')
+        tips.isi=request.POST.get('isi')
         tips.kategori_id=request.POST.get('kategori')
-        if request.FILES.get('gambar'): tips.gambar=request.FILES.get('gambar')
+        if request.FILES.get('gambar'):
+            import cloudinary.uploader
+            upload_result = cloudinary.uploader.upload(request.FILES.get('gambar'))
+            tips.gambar = upload_result['secure_url']
         tips.save()
         messages.success(request,'Tips berhasil diupdate!')
         return redirect('tips_list_dashboard')
     return render(request,'dashboard/tips_form.html',{'tips':tips,'kategori_list':kategori_list,'action':'Edit'})
-
 
 @login_required
 @user_passes_test(is_admin)
