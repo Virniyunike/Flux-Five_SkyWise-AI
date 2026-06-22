@@ -7,4 +7,3 @@ whitenoise
 Pillow
 django-cloudinary-storage
 cloudinary
-rebuild trigger
