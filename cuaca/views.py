@@ -542,12 +542,13 @@ def galeri_upload(request):
         if not judul or not kota or not gambar:
             messages.error(request,'Judul, kota, dan foto wajib diisi!')
         else:
-            import cloudinary.uploader
-            upload_result = cloudinary.uploader.upload(gambar)
-            gambar_url = upload_result['secure_url']
+            # NOTE: gambar (file mentah dari request.FILES) langsung dipakai.
+            # Upload ke Cloudinary otomatis ditangani oleh DEFAULT_FILE_STORAGE
+            # (django-cloudinary-storage) saat obj.save() dipanggil — jangan
+            # upload manual dengan cloudinary.uploader.upload() di sini.
             obj = Galeri(
                 judul=judul, kota=kota, kondisi_cuaca=kondisi,
-                deskripsi=deskripsi, gambar=gambar_url, disetujui=False,
+                deskripsi=deskripsi, gambar=gambar, disetujui=False,
             )
             if request.user.is_authenticated:
                 obj.diunggah_oleh = request.user
@@ -686,15 +687,12 @@ def tips_create(request):
     kategori_list = Kategori.objects.all()
     if request.method == 'POST':
         gambar = request.FILES.get('gambar')
-        gambar_url = None
-        if gambar:
-            import cloudinary.uploader
-            upload_result = cloudinary.uploader.upload(gambar)
-            gambar_url = upload_result['secure_url']
+        # NOTE: file mentah langsung diteruskan ke field ImageField.
+        # Upload ke Cloudinary otomatis ditangani storage backend saat .save().
         TipsCuaca.objects.create(
             judul=request.POST.get('judul'),isi=request.POST.get('isi'),
             kategori_id=request.POST.get('kategori'),
-            gambar=gambar_url, penulis=request.user,
+            gambar=gambar, penulis=request.user,
         )
         messages.success(request,'Tips berhasil ditambahkan!')
         return redirect('tips_list_dashboard')
@@ -710,9 +708,9 @@ def tips_edit(request, pk):
         tips.isi=request.POST.get('isi')
         tips.kategori_id=request.POST.get('kategori')
         if request.FILES.get('gambar'):
-            import cloudinary.uploader
-            upload_result = cloudinary.uploader.upload(request.FILES.get('gambar'))
-            tips.gambar = upload_result['secure_url']
+            # NOTE: file mentah langsung di-assign ke field gambar.
+            # Storage backend (Cloudinary) yang menangani upload saat .save().
+            tips.gambar = request.FILES.get('gambar')
         tips.save()
         messages.success(request,'Tips berhasil diupdate!')
         return redirect('tips_list_dashboard')
