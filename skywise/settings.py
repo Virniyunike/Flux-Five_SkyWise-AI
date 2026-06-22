@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'skywise.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQLDATABASE'),
+        'NAME': os.getenv('MYSQL_DATABASE'),
         'USER': os.getenv('MYSQLUSER'),
         'PASSWORD': os.getenv('MYSQLPASSWORD'),
         'HOST': os.getenv('MYSQLHOST'),
