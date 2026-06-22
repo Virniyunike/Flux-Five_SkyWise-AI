@@ -12,17 +12,15 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://flux-fiveskywise-ai-production.up.railway.app']
-# PERBAIKAN UTAMA: Menggunakan Cloudinary khusus untuk file MEDIA saja 
-# agar tidak merusak dan mengambil alih fungsionalitas file STATIC (CSS)
-INSTALLED_APPS = [
+
+pythonINSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.staticfiles', 
-    'cloudinary_storage',         
+    'cloudinary_storage',
     'cloudinary',
     'accounts',
     'cuaca',
