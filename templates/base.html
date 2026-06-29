@@ -2,17 +2,17 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SkyWise AI — Informasi Cuaca Real-Time{% endblock %}</title>
-    <meta name="description" content="SkyWise AI — Informasi cuaca akurat dari ribuan kota di seluruh dunia, tersedia secara real-time.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/skywise.css' %}">
-    {% block extra_css %}{% endblock %}
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='26'>⛅</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>{% block title %}SkyWise AI — Informasi Cuaca Real-Time{% endblock %}</title>
+<meta name="description" content="SkyWise AI — Informasi cuaca akurat dari ribuan kota di seluruh dunia, tersedia secara real-time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/skywise.css' %}">
+{% block extra_css %}{% endblock %}
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='26'>⛅</text></svg>">
 </head>
 <body>
 
@@ -22,7 +22,8 @@
     SkyWise <span style="color:#6FA8DC;">AI</span>
   </a>
 
-  <div class="nav-links" id="nav-links">
+<div class="nav-links" id="nav-links">
+  {% if user.is_authenticated %}
     <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
       <i class="fa fa-house"></i> Beranda
     </a>
@@ -47,26 +48,22 @@
     <a href="{% url 'feedback' %}" class="nav-link {% if request.resolver_match.url_name == 'feedback' %}active{% endif %}">
       <i class="fa fa-comment-dots"></i> Feedback
     </a>
-    {% if user.is_authenticated %}
-      {% if user.is_staff %}
-        <a href="{% url 'dashboard' %}" class="nav-link nav-cta">
-          <i class="fa fa-shield-halved"></i> Dashboard
-        </a>
-      {% else %}
-        <a href="{% url 'profil' %}" class="nav-link" style="display:flex;align-items:center;gap:6px;">
-          <span style="width:26px;height:26px;background:#6FA8DC;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#0f172a;">{{ user.username|first|upper }}</span>
-          {{ user.username }}
-        </a>
-        <a href="{% url 'logout' %}" class="nav-link" style="color:#f87171;">
-          <i class="fa fa-right-from-bracket"></i> Keluar
-        </a>
-      {% endif %}
+    {% if user.is_staff %}
+      <a href="{% url 'dashboard' %}" class="nav-link nav-cta">
+        <i class="fa fa-shield-halved"></i> Dashboard
+      </a>
     {% else %}
-      <a href="{% url 'login' %}" class="nav-link nav-cta">
-        <i class="fa fa-right-to-bracket"></i> Masuk
+      <a href="{% url 'profil' %}" class="nav-link" style="display:flex;align-items:center;gap:6px;">
+        <span style="width:26px;height:26px;background:#6FA8DC;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#0f172a;">{{ user.username|first|upper }}</span>
+        {{ user.username }}
+      </a>
+      <a href="{% url 'logout' %}" class="nav-link" style="color:#f87171;">
+        <i class="fa fa-right-from-bracket"></i> Keluar
       </a>
     {% endif %}
-  </div>
+  {% else %}
+  {% endif %}
+</div>
 
   <button class="hamburger" id="ham" aria-label="Menu">
     <span></span><span></span><span></span>
