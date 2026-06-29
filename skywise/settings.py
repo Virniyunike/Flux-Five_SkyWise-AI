@@ -7,6 +7,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://flux-fiveskywise-ai-production.up.railway.app']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # ← BARU
+    'allauth.account.middleware.AccountMiddleware',  
 ]
 
 ROOT_URLCONF = 'skywise.urls'
@@ -73,7 +74,7 @@ DATABASES = {
     }
 }
 
-# ← BARU: Authentication backends (wajib untuk allauth)
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -112,9 +113,9 @@ LOGOUT_REDIRECT_URL = '/'
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # KONFIGURASI ALLAUTH  ← BARU SEMUA
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ACCOUNT_LOGIN_METHODS = {'email'}           # login pakai email, bukan username
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # field daftar
-ACCOUNT_EMAIL_VERIFICATION = 'none'        # nonaktifkan verifikasi email dulu
+ACCOUNT_LOGIN_METHODS = {'email'}           
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  
+ACCOUNT_EMAIL_VERIFICATION = 'none'      
 ACCOUNT_LOGIN_ON_GET = False
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_REDIRECT_ON_SSO_AUTO_SIGNUP = True
