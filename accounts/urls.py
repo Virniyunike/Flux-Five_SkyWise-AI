@@ -1,4 +1,4 @@
-from django.urls import path, reverse_lazy
+from django.urls import path, include, reverse_lazy
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -6,7 +6,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
 
-    # Password reset 
+    path('social/', include('allauth.urls')),
+
     path('password-reset/',
          views.CustomPasswordResetView.as_view(
              template_name='accounts/password_reset.html',
